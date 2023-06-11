@@ -15,6 +15,7 @@ try{
 
 app.set('view engine', "ejs");
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res)=>{
     res.send("HOME");
@@ -24,6 +25,16 @@ app.get('/campgrounds', async (req, res)=>{
     const campGrounds = await CampGround.find({});
     res.render('campgrounds/index', {campGrounds});
 });
+
+app.get('/campgrounds/new', async (req, res)=>{
+    res.render('campgrounds/new');
+})
+
+app.post('/campgrounds', async (req, res)=>{
+    const campGround = new CampGround(req.body.campground);
+    await campGround.save();
+    res.redirect(`/campgrounds/${campGround._id}`);
+})
 
 app.get('/campgrounds/:id', async (req, res)=>{;
     const campGround = await CampGround.findById(req.params.id);
