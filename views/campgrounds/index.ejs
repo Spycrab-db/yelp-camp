@@ -8,8 +8,10 @@
 <body>
     <h1>All Campgrounds</h1>
     <ul>
-        <% for( let campground of campGrounds ) { %>
-            <li><%= campground.title %></li>
+        <% for( let campGround of campGrounds ) { %>
+            <li>
+                <a href="/campgrounds/<%= campGround._id %>"><%= campGround.title %></a>
+            </li>
         <% } %>
     </ul>
 </body>
