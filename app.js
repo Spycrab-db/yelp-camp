@@ -58,6 +58,12 @@ app.put('/campgrounds/:id', async (req, res)=>{
     await Campground.findByIdAndUpdate(id, req.body.campground);
     res.redirect(`/campgrounds/${id}`);
 });
+//Delete campground route
+app.delete('/campgrounds/:id', async (req, res)=>{
+    const { id } = req.params;
+    deletedCamp = await Campground.findByIdAndDelete(id);
+    res.redirect(`/campgrounds`);
+})
 //Confirm server is running
 app.listen(3000, ()=>{
     console.log("LISTENING AT PORT 3000");
