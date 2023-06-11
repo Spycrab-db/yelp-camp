@@ -17,7 +17,7 @@ app.set('view engine', "ejs");
 app.set('view', path.join(__dirname, 'views'));
 
 app.get('/', (req, res)=>{
-    
+
 });
 
 app.listen(3000, ()=>{
