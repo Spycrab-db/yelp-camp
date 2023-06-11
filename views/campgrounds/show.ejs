@@ -7,9 +7,9 @@
     </h2>
     <img src="<%= campground.image %>" alt="campground image">
     <p><%= campground.description %></p>
-    <a href="/campgrounds/<%= campground._id %>/edit">Edit</a>
+    <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info mb-3">Edit</a>
     <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-        <button>Delete Campground</button>
+        <button class="btn btn-danger">Delete Campground</button>
     </form>
     <hr>
-    <a href="/campgrounds">View All Campgrounds</a>
+    <a href="/campgrounds" class="btn btn-primary mb-3">View All Campgrounds</a>
