@@ -1,9 +1,11 @@
+//Require all dependencies and modules
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const app = express();
-const CampGround = require("./models/camp-ground");
+const Campground = require("./models/camp-ground");
 
+//Connect to MongoDB
 try{
     mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp').then(()=>{
         console.log("DATABASE CONNECTED");
@@ -13,32 +15,34 @@ try{
     console.log(e);
 }
 
+//Configure Express
 app.set('view engine', "ejs");
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({extended: true}));
 
+//Home route
 app.get('/', (req, res)=>{
     res.send("HOME");
 });
-
+//Campgrounds route
 app.get('/campgrounds', async (req, res)=>{
-    const campGrounds = await CampGround.find({});
-    res.render('campgrounds/index', {campGrounds});
+    const campgrounds = await Campground.find({});
+    res.render('campgrounds/index', {campgrounds});
 });
-
+//Render new campground route
 app.get('/campgrounds/new', async (req, res)=>{
     res.render('campgrounds/new');
 })
-
+//Post new campground route
 app.post('/campgrounds', async (req, res)=>{
-    const campGround = new CampGround(req.body.campground);
-    await campGround.save();
-    res.redirect(`/campgrounds/${campGround._id}`);
+    const campground = new Campground(req.body.campground);
+    await campground.save();
+    res.redirect(`/campgrounds/${campground._id}`);
 })
-
+//Show campground route
 app.get('/campgrounds/:id', async (req, res)=>{;
-    const campGround = await CampGround.findById(req.params.id);
-    res.render('campgrounds/show', {campGround});
+    const campground = await Campground.findById(req.params.id);
+    res.render('campgrounds/show', {campground});
 });
 
 app.listen(3000, ()=>{

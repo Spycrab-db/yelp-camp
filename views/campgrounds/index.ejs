@@ -8,9 +8,9 @@
 <body>
     <h1>All Campgrounds</h1>
     <ul>
-        <% for( let campGround of campGrounds ) { %>
+        <% for( let campground of campgrounds ) { %>
             <li>
-                <a href="/campgrounds/<%= campGround._id %>"><%= campGround.title %></a>
+                <a href="/campgrounds/<%= campground._id %>"><%= campground.title %></a>
             </li>
         <% } %>
     </ul>
