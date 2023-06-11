@@ -14,13 +14,17 @@ try{
 }
 
 app.set('view engine', "ejs");
-app.set('view', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 
 app.get('/', (req, res)=>{
-
+    res.send("HOME");
 });
+
+app.get('/campgrounds', async (req, res)=>{
+    const campGrounds = await CampGround.find({});
+    res.render('campgrounds/index', {campGrounds});
+})
 
 app.listen(3000, ()=>{
     console.log("LISTENING AT PORT 3000");
 });
-
