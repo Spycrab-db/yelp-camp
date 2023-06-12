@@ -70,10 +70,17 @@ app.delete('/campgrounds/:id', wrapAsync(async (req, res) => {
     res.redirect(`/campgrounds`);
 }));
 
-//Error handler
+//404 error handler
+app.all('*', (req, res, next) => {
+    next(new ExpressError("Page Not Found", 404))
+});
+
+//Final error handler
 app.use((err, req, res, next) => {
-    res.send("SOMETHING WENT WRONG!");
-})
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = "Oh no! Something went wrong!"
+    res.status(statusCode).render('error', { err });
+});
 //Confirm server is running
 app.listen(3000, () => {
     console.log("LISTENING AT PORT 3000");
