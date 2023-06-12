@@ -1,40 +1,69 @@
 <% layout('layouts/boilerplate') %>
     <div class="row">
-        <h1 class="text-center">Edit <%= campground.title %>
-        </h1>
-        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST">
+        <h1 class="text-center">Edit <%= campground.title %></h1>
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" novalidate class="needs-validation">
             <div class="col-6 offset-3">
                 <div class="mb-3">
                     <label for="title" class="form-label">Title</label>
-                    <input type="text" name="campground[title]" id="title" placeholder="Title"
-                        value="<%= campground.title %>" class="form-control">
+                    <input type="text" name="campground[title]" id="title" placeholder="Title" class="form-control"
+                         value="<%= campground.title %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a title.
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="location" class="form-label">Location</label>
-                    <input type="text" name="campground[location]" id="location" value="<%= campground.location %>"
-                        placeholder="Location" class="form-control">
+                    <input type="text" name="campground[location]" id="location" placeholder="Location"
+                        class="form-control" value="<%= campground.location %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a location.
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image URL</label>
-                    <input type="text" name="campground[image]" id="image" placeholder="URL"
-                        value="<%= campground.image %>" class="form-control">
+                    <input type="text" name="campground[image]" id="image" placeholder="URL" class="form-control"
+                    value="<%= campground.image %>" required>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide an image.
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="price" class="form-label">Price</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="basic-addon1">$</span>
                         <input type="text" name="campground[price]" class="form-control" placeholder="0.00"
-                            aria-label="price" value="<%= campground.price %>" aria-describedby="basic-addon1">
+                            aria-label="price" aria-describedby="basic-addon1" value="<%= campground.price %>" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a price.
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
                     <textarea type="text" name="campground[description]" id="description" placeholder="Description"
-                        class="form-control"><%= campground.description %></textarea>
+                        class="form-control" required><%= campground.description %></textarea>
+                    <div class="valid-feedback">
+                        Looks good!
+                    </div>
+                    <div class="invalid-feedback">
+                        Please provide a description.
+                    </div>
                 </div>
                 <button class="btn btn-info">Update Campground</button>
             </div>
         </form>
     </div>
     <hr>
-    <a href="/campgrounds/<%= campground._id %>" class="btn btn-danger mb-3">Cancel</a>
+    <a href="/campgrounds" class="btn btn-danger mb-3">Cancel</a>
