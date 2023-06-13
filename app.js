@@ -3,11 +3,13 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
+const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError');
 const wrapAsync = require('./utils/WrapAsync');
 const methodOverride = require('method-override');
 const app = express();
 const Campground = require("./models/camp-ground");
+const { campgroundSchema } = require('./validationSchemas');
 
 //Connect to MongoDB
 try {
@@ -26,6 +28,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
+//Validation middleware
+function validateCampground(req, res, next) {
+    const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        next(new ExpressError(error.message, 400));
+    } else {
+        next();
+    }
+}
+
 //Home route
 app.get('/', (req, res) => {
     res.send("HOME");
@@ -40,7 +52,7 @@ app.get('/campgrounds/new', wrapAsync(async (req, res) => {
     res.render('campgrounds/new');
 }));
 //Post new campground route
-app.post('/campgrounds', wrapAsync(async (req, res) => {
+app.post('/campgrounds', validateCampground, wrapAsync(async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
     res.redirect(`/campgrounds/${campground._id}`);
@@ -58,7 +70,7 @@ app.get('/campgrounds/:id/edit', wrapAsync(async (req, res) => {
     res.render('campgrounds/edit', { campground });
 }));
 //Edit campground route
-app.put('/campgrounds/:id', wrapAsync(async (req, res) => {
+app.put('/campgrounds/:id', validateCampground, wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndUpdate(id, req.body.campground);
     res.redirect(`/campgrounds/${id}`);
