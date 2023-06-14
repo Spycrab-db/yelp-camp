@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
+const Review = require('./review');
 const Schema = mongoose.Schema;
 
-const campGroundSchema = new Schema({
+const campgroundSchema = new Schema({
     title: String,
     image: String,
     price: Number,
@@ -15,4 +16,13 @@ const campGroundSchema = new Schema({
     ]
 });
 
-module.exports = mongoose.model("Campground", campGroundSchema);
+//POST middleware to delete all reviews after deleting campground
+campgroundSchema.post('findOneAndDelete', async function(campground){
+    if (campground){
+        for (let reviewId of campground.reviews){
+            await Review.findByIdAndDelete(reviewId);
+        }
+    }
+})
+
+module.exports = mongoose.model("Campground", campgroundSchema);
