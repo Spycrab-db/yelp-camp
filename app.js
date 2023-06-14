@@ -69,7 +69,7 @@ app.post('/campgrounds', validateCampground, wrapAsync(async (req, res) => {
 }));
 //Show campground route
 app.get('/campgrounds/:id', wrapAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
+    const campground = await Campground.findById(req.params.id).populate('reviews');
     res.render('campgrounds/show', { campground });
 }));
 //Render edit campground route
@@ -89,7 +89,7 @@ app.delete('/campgrounds/:id', wrapAsync(async (req, res) => {
     deletedCamp = await Campground.findByIdAndDelete(id);
     res.redirect(`/campgrounds`);
 }));
-
+//POST new review
 app.post('/campgrounds/:id/review', validateReview, wrapAsync(async (req, res)=>{
     const review = new Review(req.body.review);
     reviewSchema.validate(review);
