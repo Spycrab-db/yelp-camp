@@ -21,15 +21,18 @@
                     2 days ago
                 </div>
             </div>
-            <form action="" class="mb-3">
+            <form action="/campgrounds/<%= campground._id %>/review" method="POST" class="needs-validation mb-3" novalidate>
                 <h2>Leave a Review</h2>
                 <div class="mb-3">
                     <label for="score" class="form-label">Rating</label>
                     <input type="range" name="review[score]" id="score" min="0" max="5" class="form-range">
+                    <p id="score-display">3</p>
                 </div>
                 <div class="mb-3">
                     <label for="body" class="form-label">Review</label>
-                    <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control"></textarea>
+                    <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control" required></textarea>
+                    <div class="valid-feedback">Looks good!</div>
+                    <div class="invalid-feedback">Review cannot be empty!</div>
                 </div>
                 <button class="btn btn-success">Submit</button>
             </form>
@@ -37,3 +40,11 @@
     </div>
     <hr>
     <a href="/campgrounds" class="btn btn-primary mb-3">View All Campgrounds</a>
+    <script>
+        //Updating score display as input changes
+        const scoreDisplay = document.querySelector('#score-display');
+        const score = document.querySelector('#score');
+        score.addEventListener('input', ()=>{
+            scoreDisplay.textContent = score.value;
+        })
+    </script>

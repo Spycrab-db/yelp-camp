@@ -9,7 +9,8 @@ const wrapAsync = require('./utils/WrapAsync');
 const methodOverride = require('method-override');
 const app = express();
 const Campground = require("./models/camp-ground");
-const { campgroundSchema } = require('./validationSchemas');
+const Review = require("./models/review");
+const { campgroundSchema, reviewSchema } = require('./validationSchemas');
 
 //Connect to MongoDB
 try {
@@ -28,9 +29,18 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-//Validation middleware
+//Validate campground middleware
 function validateCampground(req, res, next) {
     const { error } = campgroundSchema.validate(req.body);
+    if (error) {
+        next(new ExpressError(error.message, 400));
+    } else {
+        next();
+    }
+}
+//Validate review middleware
+function validateReview(req, res, next){
+    const { error } = reviewSchema.validate(req.body);
     if (error) {
         next(new ExpressError(error.message, 400));
     } else {
@@ -59,13 +69,11 @@ app.post('/campgrounds', validateCampground, wrapAsync(async (req, res) => {
 }));
 //Show campground route
 app.get('/campgrounds/:id', wrapAsync(async (req, res) => {
-    ;
     const campground = await Campground.findById(req.params.id);
     res.render('campgrounds/show', { campground });
 }));
 //Render edit campground route
 app.get('/campgrounds/:id/edit', wrapAsync(async (req, res) => {
-    ;
     const campground = await Campground.findById(req.params.id);
     res.render('campgrounds/edit', { campground });
 }));
@@ -80,6 +88,16 @@ app.delete('/campgrounds/:id', wrapAsync(async (req, res) => {
     const { id } = req.params;
     deletedCamp = await Campground.findByIdAndDelete(id);
     res.redirect(`/campgrounds`);
+}));
+
+app.post('/campgrounds/:id/review', validateReview, wrapAsync(async (req, res)=>{
+    const review = new Review(req.body.review);
+    reviewSchema.validate(review);
+    const { id } = req.params;
+    const campground = await Campground.findById(id);
+    campground.reviews.push(review);
+    await Promise.all([campground.save(), review.save()]);
+    res.redirect(`/campgrounds/${campground._id}`);
 }));
 
 //404 error handler
