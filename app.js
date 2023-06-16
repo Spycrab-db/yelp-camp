@@ -3,14 +3,12 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const ejsMate = require('ejs-mate');
-const Joi = require('joi');
 const ExpressError = require('./utils/ExpressError');
-const wrapAsync = require('./utils/WrapAsync');
 const methodOverride = require('method-override');
 const app = express();
-const Campground = require("./models/camp-ground");
-const Review = require("./models/review");
-const { campgroundSchema, reviewSchema } = require('./validationSchemas');
+
+const campgroundRouter = require('./routes/campgrounds');
+const reviewRouter = require('./routes/reviews');
 
 //Connect to MongoDB
 try {
@@ -29,84 +27,14 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-//Validate campground middleware
-function validateCampground(req, res, next) {
-    const { error } = campgroundSchema.validate(req.body);
-    if (error) {
-        next(new ExpressError(error.message, 400));
-    } else {
-        next();
-    }
-}
-//Validate review middleware
-function validateReview(req, res, next){
-    const { error } = reviewSchema.validate(req.body);
-    if (error) {
-        next(new ExpressError(error.message, 400));
-    } else {
-        next();
-    }
-}
-
 //Home route
 app.get('/', (req, res) => {
     res.send("HOME");
 });
-//Campgrounds route
-app.get('/campgrounds', wrapAsync(async (req, res) => {
-    const campgrounds = await Campground.find({});
-    res.render('campgrounds/index', { campgrounds });
-}));
-//Render new campground route
-app.get('/campgrounds/new', wrapAsync(async (req, res) => {
-    res.render('campgrounds/new');
-}));
-//Post new campground route
-app.post('/campgrounds', validateCampground, wrapAsync(async (req, res) => {
-    const campground = new Campground(req.body.campground);
-    await campground.save();
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-//Show campground route
-app.get('/campgrounds/:id', wrapAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews');
-    res.render('campgrounds/show', { campground });
-}));
-//Render edit campground route
-app.get('/campgrounds/:id/edit', wrapAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id);
-    res.render('campgrounds/edit', { campground });
-}));
-//Edit campground route
-app.put('/campgrounds/:id', validateCampground, wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    await Campground.findByIdAndUpdate(id, req.body.campground);
-    res.redirect(`/campgrounds/${id}`);
-}));
-//Delete campground route
-app.delete('/campgrounds/:id', wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    deletedCamp = await Campground.findByIdAndDelete(id);
-    res.redirect(`/campgrounds`);
-}));
-//Review routes
-//POST new review route
-app.post('/campgrounds/:id/reviews', validateReview, wrapAsync(async (req, res)=>{
-    const review = new Review(req.body.review);
-    reviewSchema.validate(review);
-    const { id } = req.params;
-    const campground = await Campground.findById(id);
-    campground.reviews.push(review);
-    await Promise.all([campground.save(), review.save()]);
-    res.redirect(`/campgrounds/${campground._id}`);
-}));
-//DELETE review route
-app.delete('/campgrounds/:id/reviews/:reviewId', wrapAsync(async (req, res)=>{
-    const {id, reviewId} = req.params;
-    const detachReview = Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Promise.all([detachReview, Review.findByIdAndDelete(reviewId)]);
-    res.redirect(`/campgrounds/${id}`);
-}));
+
+//Use routers
+app.use('/campgrounds', campgroundRouter);
+app.use('/campgrounds/:id/reviews', reviewRouter);
 
 //404 error handler
 app.all('*', (req, res, next) => {
