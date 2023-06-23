@@ -2,6 +2,7 @@ const express = require('express');
 const ExpressError = require('../utils/ExpressError');
 const wrapAsync = require('../utils/WrapAsync');
 const Campground = require("../models/camp-ground");
+const { checkAuthenticated } = require('../middleware');
 const { campgroundSchema } = require('../validationSchemas');
 
 const router = express.Router();
@@ -22,11 +23,11 @@ router.get('/', wrapAsync(async (req, res) => {
     res.render('campgrounds/index', { campgrounds });
 }));
 //Render new campground route
-router.get('/new', wrapAsync(async (req, res) => {
+router.get('/new', checkAuthenticated, wrapAsync(async (req, res) => {
     res.render('campgrounds/new');
 }));
 //Post new campground route
-router.post('/', validateCampground, wrapAsync(async (req, res) => {
+router.post('/', checkAuthenticated, validateCampground, wrapAsync(async (req, res) => {
     const campground = new Campground(req.body.campground);
     await campground.save();
     req.flash('success', 'You made a new campground!');
