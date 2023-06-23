@@ -2,6 +2,9 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const passport = require('passport');
+const passportLocal = require('passport-local');
+const User = require('./models/user');
 const ejsMate = require('ejs-mate');
 const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
@@ -9,8 +12,10 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
 
+//Importing all routes
 const campgroundRouter = require('./routes/campgrounds');
 const reviewRouter = require('./routes/reviews');
+const authRouter = require('./routes/auth');
 
 //Connect to MongoDB
 try {
@@ -43,7 +48,12 @@ app.use((req, res, next)=>{
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
-})
+});
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new passportLocal(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //Home route
 app.get('/', (req, res) => {
@@ -53,6 +63,7 @@ app.get('/', (req, res) => {
 //Use routers
 app.use('/campgrounds', campgroundRouter);
 app.use('/campgrounds/:id/reviews', reviewRouter);
+app.use('/', authRouter);
 
 //404 error handler
 app.all('*', (req, res, next) => {
