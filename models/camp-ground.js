@@ -8,12 +8,17 @@ const campgroundSchema = new Schema({
     price: Number,
     description: String,
     location: String,
+    author: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
+    },
     reviews: [
         {
             type: mongoose.Types.ObjectId,
             ref: 'Review'
         }
     ]
+    
 });
 
 //POST middleware to delete all reviews after deleting campground

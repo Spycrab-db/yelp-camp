@@ -16,6 +16,7 @@ const app = express();
 const campgroundRouter = require('./routes/campgrounds');
 const reviewRouter = require('./routes/reviews');
 const authRouter = require('./routes/auth');
+const { log } = require('console');
 
 //Connect to MongoDB
 try {
@@ -58,7 +59,6 @@ app.use((req, res, next)=>{
     if (!req.isAuthenticated() && req.originalUrl !== '/login' && req.originalUrl !== '/register'){
         req.session.returnTo = req.originalUrl;
     }
-    console.log(req.session.returnTo);
     next();
 });
 //Home route

@@ -30,7 +30,8 @@ async function seedDB() {
             image: "http://source.unsplash.com/collection/483251",
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id corporis aliquid reiciendis, assumenda ad, alias molestiae facere dolorum sunt tenetur perferendis voluptas odio, vitae nostrum distinctio asperiores ratione impedit ab! Quod ex libero quidem repellat laboriosam obcaecati cupiditate, ipsam expedita voluptatum praesentium in autem suscipit maiores, explicabo eaque sint impedit, architecto quaerat nobis. Vel impedit minima et beatae corrupti natus!",
-            price
+            price,
+            author: '6495f435587977928054f697'
         });
         await camp.save();
     }
