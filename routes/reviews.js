@@ -10,6 +10,8 @@ const Review = require("../models/review");
 const { reviewSchema } = require('../validationSchemas');
 //Middlewares
 const { validateId, checkAuthenticated, checkOwnReview} = require('../middleware');
+//Controller
+const controller = require('../controllers/reviews');
 
 const router = express.Router({
     mergeParams: true
@@ -28,22 +30,8 @@ function validateReview(req, res, next){
 //Review routes
 //POST new review route
 router.use(validateId);
-router.post('/', checkAuthenticated, validateReview, wrapAsync(async (req, res)=>{
-    const review = new Review(req.body.review);
-    reviewSchema.validate(review);
-    review.author = req.user;
-    req.campground.reviews.push(review);
-    await Promise.all([req.campground.save(), review.save()]);
-    req.flash('success', 'Created new review!');
-    res.redirect(`/campgrounds/${req.campground._id}`);
-}));
+router.post('/', checkAuthenticated, validateReview, wrapAsync(controller.createReview));
 //DELETE review route
-router.delete('/:reviewId', checkAuthenticated, checkOwnReview, wrapAsync(async (req, res)=>{
-    const {id, reviewId} = req.params;
-    const detachReview = Campground.findByIdAndUpdate(id, {$pull: {reviews: reviewId}});
-    await Promise.all([detachReview, Review.findByIdAndDelete(reviewId)]);
-    req.flash('success', 'Successfully deleted review!');
-    res.redirect(`/campgrounds/${id}`);
-}));
+router.delete('/:reviewId', checkAuthenticated, checkOwnReview, wrapAsync(controller.deleteReview));
 
 module.exports = router;
