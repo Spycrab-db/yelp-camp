@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate') %>
+<link rel="stylesheet" href="/css/stars.css">
     <div class="row">
         <div class="col-7">
             <div class="card">
@@ -39,9 +40,20 @@
                     novalidate>
                     <h2>Leave a Review</h2>
                     <div class="mb-3">
-                        <label for="score" class="form-label">Rating</label>
-                        <input type="range" name="review[score]" id="score" min="0" max="5" class="form-range">
-                        <p id="score-display">3</p>
+                        <fieldset class="starability-basic">
+                            <legend>Score:</legend>
+                            <input type="radio" id="no-rate" class="input-no-rate" name="review[score]" value="0" checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="review[score]" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="review[score]" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="review[score]" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="review[score]" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="review[score]" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                          </fieldset>
                     </div>
                     <div class="mb-3">
                         <label for="body" class="form-label">Review</label>
@@ -56,9 +68,10 @@
                     <% for( let review of campground.reviews ) { %>
                         <div class="mb-3 card">
                             <div class="card-body">
-                                <h5>Score: <%= review.score %>
-                                </h5>
                                 <h6 class="card-subtitle mb-2 text-body-secondary"><%= review.author.username %></h6>
+                                <p class="starability-result" data-rating="<%= review.score %>">
+                                    Rated: 3 stars
+                                  </p>
                                 <p>
                                     <%= review.body %>
                                 </p>
