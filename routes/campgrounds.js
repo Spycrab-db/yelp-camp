@@ -2,7 +2,7 @@ const express = require('express');
 const ExpressError = require('../utils/ExpressError');
 const wrapAsync = require('../utils/WrapAsync');
 const Campground = require("../models/camp-ground");
-const { checkAuthenticated, validateCampground, checkPermission, validateId } = require('../middleware');
+const { checkAuthenticated, validateCampground, checkOwnCamp, validateId } = require('../middleware');
 
 const router = express.Router();
 
@@ -25,27 +25,33 @@ router.post('/', checkAuthenticated, validateCampground, wrapAsync(async (req, r
 }));
 //Show campground route
 router.get('/:id', validateId, wrapAsync(async (req, res) => {
-    const campground = await Campground.findById(req.params.id).populate('reviews').populate('author');
+    const campground = await Campground.findById(req.params.id)
+    .populate({
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    })
+    .populate('author');
     if (!campground) {
         req.flash('error', 'Campground not found');
         res.redirect('/campgrounds');
     } else {
-        console.log(campground);
         res.render('campgrounds/show', { campground });
     }
 }));
 //Render edit campground route
-router.get('/:id/edit', validateId, checkAuthenticated, checkPermission, wrapAsync(async (req, res) => {
+router.get('/:id/edit', validateId, checkAuthenticated, checkOwnCamp, wrapAsync(async (req, res) => {
     res.render('campgrounds/edit', { campground: req.campground });
 }));
 //Edit campground route
-router.put('/:id', validateId, checkAuthenticated, checkPermission, validateCampground, wrapAsync(async (req, res) => {
+router.put('/:id', validateId, checkAuthenticated, checkOwnCamp, validateCampground, wrapAsync(async (req, res) => {
     await req.campground.updateOne(req.body.campground);
     req.flash('success', 'Successfully updated campground!');
     res.redirect(`/campgrounds/${req.params.id}`);
 }));
 //Delete campground route
-router.delete('/:id', validateId, checkAuthenticated, checkPermission, wrapAsync(async (req, res) => {
+router.delete('/:id', validateId, checkAuthenticated, checkOwnCamp, wrapAsync(async (req, res) => {
     req.campground.deleteOne();
     req.flash('success', 'Successfully deleted campground!');
     res.redirect(`/campgrounds`);

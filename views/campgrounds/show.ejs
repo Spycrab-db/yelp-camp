@@ -34,37 +34,44 @@
             </div>
         </div>
         <div class="col-5">
-            <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="needs-validation mb-3"
-                novalidate>
-                <h2>Leave a Review</h2>
-                <div class="mb-3">
-                    <label for="score" class="form-label">Rating</label>
-                    <input type="range" name="review[score]" id="score" min="0" max="5" class="form-range">
-                    <p id="score-display">3</p>
-                </div>
-                <div class="mb-3">
-                    <label for="body" class="form-label">Review</label>
-                    <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control" required></textarea>
-                    <div class="valid-feedback">Looks good!</div>
-                    <div class="invalid-feedback">Review cannot be empty!</div>
-                </div>
-                <button class="btn btn-success">Submit</button>
-            </form>
-            <% for( let review of campground.reviews ) { %>
-                <div class="mb-3 card">
-                    <div class="card-body">
-                        <h5>Score: <%= review.score %>
-                        </h5>
-                        <p>
-                            <%= review.body %>
-                        </p>
-                        <form action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
-                            method="POST">
-                            <button class="btn btn-sm btn-danger">Delete Review</button>
-                        </form>
+            <% if (user) { %>
+                <form action="/campgrounds/<%= campground._id %>/reviews" method="POST" class="needs-validation mb-3"
+                    novalidate>
+                    <h2>Leave a Review</h2>
+                    <div class="mb-3">
+                        <label for="score" class="form-label">Rating</label>
+                        <input type="range" name="review[score]" id="score" min="0" max="5" class="form-range">
+                        <p id="score-display">3</p>
                     </div>
-                </div>
+                    <div class="mb-3">
+                        <label for="body" class="form-label">Review</label>
+                        <textarea name="review[body]" id="body" cols="30" rows="3" class="form-control"
+                            required></textarea>
+                        <div class="valid-feedback">Looks good!</div>
+                        <div class="invalid-feedback">Review cannot be empty!</div>
+                    </div>
+                    <button class="btn btn-success">Submit</button>
+                </form>
                 <% } %>
+                    <% for( let review of campground.reviews ) { %>
+                        <div class="mb-3 card">
+                            <div class="card-body">
+                                <h5>Score: <%= review.score %>
+                                </h5>
+                                <h6 class="card-subtitle mb-2 text-body-secondary"><%= review.author.username %></h6>
+                                <p>
+                                    <%= review.body %>
+                                </p>
+                                <% if (user.equals(review.author)) { %>
+                                 <form
+                                    action="/campgrounds/<%= campground._id %>/reviews/<%= review._id %>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-sm btn-danger">Delete Review</button>
+                                </form>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% } %>
         </div>
     </div>
     <hr>

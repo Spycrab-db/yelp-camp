@@ -1,5 +1,6 @@
 const passport = require('passport');
 const Campground = require('./models/camp-ground');
+const Review = require('./models/review');
 const wrapAsync = require('./utils/WrapAsync');
 const ExpressError = require('./utils/ExpressError');
 const { campgroundSchema } = require('./validationSchemas');
@@ -41,8 +42,16 @@ module.exports.validateId = async (req, res, next)=>{
     }
 }
 
-module.exports.checkPermission = wrapAsync(async (req, res, next) => {
+module.exports.checkOwnCamp = wrapAsync(async (req, res, next) => {
     if (!req.campground.author.equals(req.user._id)) {
+        req.flash('error', 'You do not have permission');
+        return res.redirect(`/campgrounds/${req.params.id}`);
+    }
+    next();
+});
+module.exports.checkOwnReview = wrapAsync(async (req, res, next) => {
+    req.review = await Review.findById(req.params.reviewId);
+    if (!req.review.author.equals(req.user._id)) {
         req.flash('error', 'You do not have permission');
         return res.redirect(`/campgrounds/${req.params.id}`);
     }

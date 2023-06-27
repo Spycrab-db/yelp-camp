@@ -10,6 +10,7 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
+const { validateId } = require('./middleware');
 const app = express();
 
 //Importing all routes
@@ -17,6 +18,7 @@ const campgroundRouter = require('./routes/campgrounds');
 const reviewRouter = require('./routes/reviews');
 const authRouter = require('./routes/auth');
 const { log } = require('console');
+
 
 //Connect to MongoDB
 try {
