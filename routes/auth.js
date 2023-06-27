@@ -6,13 +6,16 @@ const passport = require('passport');
 const { saveReturnTo } = require('../middleware');
 const controller = require('../controllers/auth');
 
-router.get('/register', wrapAsync(controller.renderRegister));
+router.route('/register')
+    .get(wrapAsync(controller.renderRegister))
+    .post(wrapAsync(controller.registerUser));
 
-router.get('/login', controller.renderLogin);
-
-router.post('/register', wrapAsync(controller.registerUser));
-
-router.post('/login', saveReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), wrapAsync(controller.loginUser))
+router.route('/login')
+    .get(controller.renderLogin)
+    .post(
+        saveReturnTo,
+        passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }),
+        wrapAsync(controller.loginUser))
 
 router.get('/logout', controller.logoutUser);
 

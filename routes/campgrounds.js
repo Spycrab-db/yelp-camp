@@ -7,25 +7,34 @@ const { checkAuthenticated, validateCampground, checkOwnCamp, validateId } = req
 
 const router = express.Router();
 
-//Campgrounds route
-router.get('/', wrapAsync(controller.index));
+//General campgrounds route
+router.route('/')
+    .get(wrapAsync(controller.index))
+    .post(checkAuthenticated, validateCampground, wrapAsync(controller.createCampground));
 
 //Render new campground route
 router.get('/new', checkAuthenticated, wrapAsync(controller.renderNewForm));
 
-//Post new campground route
-router.post('/', checkAuthenticated, validateCampground, wrapAsync(controller.createCampground));
-
-//Show campground route
-router.get('/:id', validateId, wrapAsync(controller.renderCampground));
+//Individual campground route
+router.route('/:id')
+    .get(validateId, wrapAsync(controller.renderCampground))
+    .put(
+        validateId,
+        checkAuthenticated,
+        checkOwnCamp,
+        validateCampground,
+        wrapAsync(controller.editCampground))
+    .delete(
+        validateId,
+        checkAuthenticated,
+        checkOwnCamp,
+        wrapAsync(controller.deleteCampground));
 
 //Render edit campground route
-router.get('/:id/edit', validateId, checkAuthenticated, checkOwnCamp, wrapAsync(controller.renderEditForm));
-
-//Edit campground route
-router.put('/:id', validateId, checkAuthenticated, checkOwnCamp, validateCampground, wrapAsync(controller.editCampground));
-
-//Delete campground route
-router.delete('/:id', validateId, checkAuthenticated, checkOwnCamp, wrapAsync(controller.deleteCampground));
+router.get('/:id/edit',
+    validateId,
+    checkAuthenticated,
+    checkOwnCamp,
+    wrapAsync(controller.renderEditForm));
 
 module.exports = router;
