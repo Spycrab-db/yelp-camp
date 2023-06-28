@@ -10,8 +10,11 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
-const { validateId } = require('./middleware');
 const app = express();
+
+if (process.env.NODE_ENV !== "production"){
+    require('dotenv').config();
+}
 
 //Importing all routes
 const campgroundRouter = require('./routes/campgrounds');

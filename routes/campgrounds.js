@@ -4,13 +4,20 @@ const wrapAsync = require('../utils/WrapAsync');
 const Campground = require("../models/camp-ground");
 const controller = require('../controllers/campgrounds');
 const { checkAuthenticated, validateCampground, checkOwnCamp, validateId } = require('../middleware');
+const multer = require('multer');
+const { storage } = require('../cloudinary');
+const upload = multer({ storage });
 
 const router = express.Router();
 
 //General campgrounds route
 router.route('/')
     .get(wrapAsync(controller.index))
-    .post(checkAuthenticated, validateCampground, wrapAsync(controller.createCampground));
+    .post(
+        checkAuthenticated,
+        upload.array('image'),
+        validateCampground,
+        wrapAsync(controller.createCampground));
 
 //Render new campground route
 router.get('/new', checkAuthenticated, wrapAsync(controller.renderNewForm));
@@ -22,6 +29,7 @@ router.route('/:id')
         validateId,
         checkAuthenticated,
         checkOwnCamp,
+        upload.array('image'),
         validateCampground,
         wrapAsync(controller.editCampground))
     .delete(
