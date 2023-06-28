@@ -43,8 +43,15 @@ const campgroundSchema = new Schema({
             type: mongoose.Types.ObjectId,
             ref: 'Review'
         }
-    ]
-
+    ],
+},
+    {
+        toJSON: {
+            virtuals: true
+        }
+    });
+campgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>`
 });
 
 //POST middleware to delete all reviews after deleting campground
