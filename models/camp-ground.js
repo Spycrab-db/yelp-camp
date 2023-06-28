@@ -7,7 +7,7 @@ const imageSchema = new Schema({
     filename: String
 });
 
-imageSchema.virtual('thumbnail').get(function (){
+imageSchema.virtual('thumbnail').get(function () {
     return this.url.replace('/upload', '/upload/w_200');
 });
 
@@ -23,6 +23,17 @@ const campgroundSchema = new Schema({
     price: Number,
     description: String,
     location: String,
+    geometry: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            required: true,
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     author: {
         type: mongoose.Types.ObjectId,
         ref: 'User'
@@ -33,13 +44,13 @@ const campgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
-    
+
 });
 
 //POST middleware to delete all reviews after deleting campground
-campgroundSchema.post('findOneAndDelete', async function(campground){
-    if (campground){
-        for (let reviewId of campground.reviews){
+campgroundSchema.post('findOneAndDelete', async function (campground) {
+    if (campground) {
+        for (let reviewId of campground.reviews) {
             await Review.findByIdAndDelete(reviewId);
         }
     }
