@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="/css/stars.css">
     <div class="row">
         <div class="col-7">
+            <div id='map' style='width: 400px; height: 300px;'></div>
             <div id="carouselExample" class="carousel slide">
                 <div class="carousel-inner">
                     <% campground.images.forEach((image, i)=> { %>
@@ -10,7 +11,7 @@
                         </div>
                         <% }); %>
                 </div>
-                <% if (campground.images.length > 1) { %>
+                <% if (campground.images.length> 1) { %>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
                         data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -23,38 +24,37 @@
                     </button>
                     <% } %>
             </div>
-           
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= campground.title %>
-                        </h5>
-                        <h6>By <%= campground.author.username %>
-                        </h6>
-                        <p class="card-text">
-                            <%= campground.description %>
-                        </p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item text-body-secondary">
-                            <%= campground.location %>
-                        </li>
-                        <li class="list-group-item">$<%= campground.price %>/night</li>
-                    </ul>
-                    <% if (user && campground.author.equals(user)) { %>
-                        <div class="card-body">
-                            <a href="/campgrounds/<%= campground._id %>/edit"
-                                class="card-link btn btn-info mb-3">Edit</a>
-                            <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
-                                <button class="btn btn-danger">Delete Campground</button>
-                            </form>
-                        </div>
-                        <% } %>
 
-                            <div class="card-footer text-body-secondary">
-                                2 days ago
-                            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
+                    <h6>By <%= campground.author.username %>
+                    </h6>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-body-secondary">
+                        <%= campground.location %>
+                    </li>
+                    <li class="list-group-item">$<%= campground.price %>/night</li>
+                </ul>
+                <% if (user && campground.author.equals(user)) { %>
+                    <div class="card-body">
+                        <a href="/campgrounds/<%= campground._id %>/edit" class="card-link btn btn-info mb-3">Edit</a>
+                        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete Campground</button>
+                        </form>
+                    </div>
+                    <% } %>
+
+                        <div class="card-footer text-body-secondary">
+                            2 days ago
+                        </div>
+            </div>
         </div>
         <div class="col-5">
             <% if (user) { %>
@@ -114,11 +114,9 @@
     </div>
     <hr>
     <a href="/campgrounds" class="btn btn-primary mb-3">View All Campgrounds</a>
-    <script>
-        //Updating score display as input changes
-        const scoreDisplay = document.querySelector('#score-display');
-        const score = document.querySelector('#score');
-        score.addEventListener('input', () => {
-            scoreDisplay.textContent = score.value;
-        })
-    </script>
+
+<script>
+    const mapBoxToken = '<%- process.env.MAPBOX_TOKEN %>';
+    const campground = <%- JSON.stringify(campground) %>;
+</script>
+<script src="/js/showPageMap.js"></script>
