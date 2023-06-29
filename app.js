@@ -68,7 +68,7 @@ app.use((req, res, next)=>{
 });
 //Home route
 app.get('/', (req, res) => {
-    res.send("HOME");
+    res.render('home');
 });
 
 //Use routers
