@@ -10,6 +10,7 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
+const mongoSanitize = require('express-mongo-sanitize');
 const app = express();
 
 if (process.env.NODE_ENV !== "production"){
@@ -40,6 +41,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(mongoSanitize());
 app.use(session({
     secret: 'secret',
     resave: false,
