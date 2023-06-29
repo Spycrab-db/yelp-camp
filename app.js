@@ -12,6 +12,7 @@ const session = require('express-session');
 const flash = require('connect-flash');
 const mongoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const MongoStore = require('connect-mongo');
 const app = express();
 
 if (process.env.NODE_ENV !== "production"){
@@ -26,8 +27,10 @@ const { log } = require('console');
 
 
 //Connect to MongoDB
+// const dbUrl = process.env.DB_URL
+const dbUrl = 'mongodb://127.0.0.1:27017/yelp-camp'
 try {
-    mongoose.connect('mongodb://127.0.0.1:27017/yelp-camp').then(() => {
+    mongoose.connect(dbUrl).then(() => {
         console.log("DATABASE CONNECTED");
     });
 } catch (e) {
@@ -43,7 +46,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(mongoSanitize());
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret: 'secret'
+    }
+});
+
 app.use(session({
+    store,
     name: 'session',
     secret: 'secret',
     resave: false,
