@@ -11,7 +11,7 @@
 - Joi (Data validation)
 - Passport (Authentication and Authorization)
 ## APIs
-- [MapBox](https://www.mapbox.com/) (Map API)
+- [Mapbox](https://www.mapbox.com/) (Map API)
 - [Cloudinary](https://cloudinary.com/) (Cloud media storage)
 ## Deployment
 Deployed on [Render](https://render.com). Initial load may take some time, since free instances go down after inactivity, subsequent requests should be quicker.
