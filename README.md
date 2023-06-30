@@ -16,4 +16,4 @@
 ## Deployment
 Deployed on [Render](https://render.com). Initial load may take some time, since free instances go down after inactivity, subsequent requests should be quicker.
 ## Security
-This a project for learning purposes only. The site delegates basic security measures to various modules. Passwords are salted and hashed with Passport, but to be safe, **please do not register with real passwords.**
+This a project for learning purposes only. The site delegates basic security measures to various modules. Passwords are salted and hashed with [Passport](https://www.passportjs.org/), but to be safe, **please do not register with real passwords.**
