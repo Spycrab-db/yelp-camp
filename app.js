@@ -53,6 +53,7 @@ const store = MongoStore.create({
     }
 });
 
+app.set('trust proxy', 1);
 app.use(session({
     store,
     name: 'session',
