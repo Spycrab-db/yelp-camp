@@ -7,7 +7,7 @@ const { saveReturnTo } = require('../middleware');
 const controller = require('../controllers/auth');
 
 router.route('/register')
-    .get(wrapAsync(controller.renderRegister))
+    .get(controller.renderRegister)
     .post(wrapAsync(controller.registerUser));
 
 router.route('/login')
