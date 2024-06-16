@@ -1,6 +1,6 @@
 # Yelp Camp
 
-[Capstone project for Colt Steele's 2023 Web Development Bootcamp](https://yelp-camp-6v4rdsyaha-uc.a.run.app)
+[Capstone project for Colt Steele's 2023 Web Development Bootcamp](https://yelp-camp-213.fly.dev/)
 
 ## Frontend Technologies:
 
