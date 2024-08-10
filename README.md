@@ -1,6 +1,6 @@
 # Yelp Camp
 
-[Capstone project for Colt Steele's 2023 Web Development Bootcamp](https://yelp-camp-213.fly.dev/)
+[Capstone project for Colt Steele's 2023 Web Development Bootcamp](https://yelp-camp-213.fly.dev) deployed on Fly
 
 ## Frontend Technologies:
 
@@ -20,10 +20,6 @@
 
 - [Mapbox](https://www.mapbox.com/) (Map API)
 - [Cloudinary](https://cloudinary.com/) (Cloud media storage)
-
-## Deployment
-
-Deployed on [Render](https://render.com). Initial load may take some time, since free instances go down after inactivity, subsequent requests should be quicker.
 
 ## Security
 
