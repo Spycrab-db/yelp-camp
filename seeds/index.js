@@ -36,7 +36,7 @@ async function seedDB() {
             location,
             description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id corporis aliquid reiciendis, assumenda ad, alias molestiae facere dolorum sunt tenetur perferendis voluptas odio, vitae nostrum distinctio asperiores ratione impedit ab! Quod ex libero quidem repellat laboriosam obcaecati cupiditate, ipsam expedita voluptatum praesentium in autem suscipit maiores, explicabo eaque sint impedit, architecto quaerat nobis. Vel impedit minima et beatae corrupti natus!",
             price,
-            author: '649ef8bac1d41d88a1031ccc',
+            author: '66cf3c2fa3a24f44458825c8',
             images: [
                 {
                   url: 'https://res.cloudinary.com/dbh56ykfb/image/upload/v1688146027/YelpCamp/tent_ifg8zl.jpg',
